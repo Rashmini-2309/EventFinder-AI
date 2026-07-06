@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>EventAI | Results</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+background:#f4f7fc;
+}
+
+header{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+padding:20px 50px;
+
+background:#4F46E5;
+
+color:white;
+
+}
+
+.logo{
+
+font-size:28px;
+font-weight:bold;
+
+}
+
+.back{
+
+background:white;
+color:#4F46E5;
+
+padding:10px 18px;
+
+border:none;
+
+border-radius:8px;
+
+cursor:pointer;
+
+font-weight:600;
+
+}
+
+.container{
+
+width:90%;
+
+margin:40px auto;
+
+}
+
+.summary{
+
+background:white;
+
+padding:25px;
+
+border-radius:15px;
+
+box-shadow:0 10px 20px rgba(0,0,0,.08);
+
+margin-bottom:30px;
+
+}
+
+.summary h2{
+
+color:#4F46E5;
+
+margin-bottom:15px;
+
+}
+
+.tags{
+
+display:flex;
+
+flex-wrap:wrap;
+
+gap:10px;
+
+}
+
+.tag{
+
+background:#EEF2FF;
+
+color:#4F46E5;
+
+padding:8px 18px;
+
+border-radius:25px;
+
+font-weight:600;
+
+}
+
+.cards{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+
+gap:25px;
+
+}
+
+.card{
+
+background:white;
+
+padding:20px;
+
+border-radius:15px;
+
+box-shadow:0 10px 20px rgba(0,0,0,.08);
+
+transition:.3s;
+
+}
+
+.card:hover{
+
+transform:translateY(-5px);
+
+}
+
+.card h3{
+
+color:#4F46E5;
+
+margin-bottom:10px;
+
+}
+
+.card p{
+
+margin:8px 0;
+
+}
+
+button{
+
+width:100%;
+
+margin-top:15px;
+
+padding:12px;
+
+background:#4F46E5;
+
+color:white;
+
+border:none;
+
+border-radius:8px;
+
+cursor:pointer;
+
+font-weight:600;
+
+}
+
+button:hover{
+
+background:#3730A3;
+
+}
+
+.noresult{
+
+text-align:center;
+
+font-size:22px;
+
+color:#777;
+
+margin-top:60px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+
+EventAI
+
+</div>
+
+<button class="back" onclick="history.back()">
+
+⬅ Back
+
+</button>
+
+</header>
+
+<div class="container">
+
+<div class="summary">
+
+<h2>Your Selected Filters</h2>
+
+<div class="tags" id="tags"></div>
+
+</div>
+
+<div class="cards" id="cards"></div>
+
+</div>
+
+<script src="js/events.js"></script>
+
+<script>
+
+const category=localStorage.getItem("category");
+const eligibility=localStorage.getItem("eligibility");
+const mode=localStorage.getItem("mode");
+const technology=localStorage.getItem("technology");
+
+const tags=document.getElementById("tags");
+
+[category,eligibility,mode,technology].forEach(value=>{
+
+const span=document.createElement("span");
+
+span.className="tag";
+
+span.innerText=value;
+
+tags.appendChild(span);
+
+});
+
+const cards=document.getElementById("cards");
+
+let found=false;
+
+events.forEach(event=>{
+
+if(
+
+(category==="All" || event.category===category)
+
+&&
+
+(eligibility==="All" || event.eligibility===eligibility)
+
+&&
+
+(mode==="All" || event.mode===mode)
+
+&&
+
+(technology==="All" || event.technology===technology)
+
+){
+
+found=true;
+
+cards.innerHTML+=`
+
+<div class="card">
+
+<h3>${event.title}</h3>
+
+<p><b>🏢 Organizer:</b> ${event.organizer}</p>
+
+<p><b>📅 Deadline:</b> ${event.date}</p>
+
+<p><b>🌐 Mode:</b> ${event.mode}</p>
+
+<p><b>🎓 Eligibility:</b> ${event.eligibility}</p>
+
+<p><b>💻 Technology:</b> ${event.technology}</p>
+
+<p><b>📍 Location:</b> ${event.location}</p>
+
+<p style="color:green;font-weight:bold;">
+⭐ ${event.match} Match
+</p>
+
+<button onclick="window.open('${event.register}','_blank')">
+
+Register
+
+</button>
+
+</div>
+
+`;
+
+}
+
+});
+
+if(!found){
+
+cards.innerHTML=`
+
+<div class="noresult">
+
+😔 No opportunities found.<br><br>
+
+Try changing your filters.
+
+</div>
+
+`;
+
+}
+
+</script>
+
+</body>
+</html>
